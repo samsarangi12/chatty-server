@@ -2,7 +2,6 @@
 
 const express = require('express');
 const SocketServer = require('ws');
-//const SocketServer = require('ws');
 const uuidv1 = require('uuid/v1');
 
 // Set the port to 3001
@@ -28,7 +27,7 @@ wss.on('connection', (ws) => {
 //****************************************************//
 // Broadcast number of clients connected to Chatty app//
 //****************************************************//
-  let clientCount = wss.clients.size
+  let clientCount = wss.clients.size;
 
   wss.clients.forEach(function each(client) {
     client.send(clientCount);
@@ -41,7 +40,7 @@ wss.on('connection', (ws) => {
   ws.on('message', function incoming(message) {
     const uuid = uuidv1();
     let receivedMsg = JSON.parse(message);
-    const newMessagesObject = {}
+    const newMessagesObject = {};
     switch(receivedMsg.type) {
       case "postMessage":
         newMessagesObject.type = "incomingMessage"
@@ -55,7 +54,7 @@ wss.on('connection', (ws) => {
         newMessagesObject.username = receivedMsg.username
         newMessagesObject.content = receivedMsg.content
       break;
-    }
+    };
     
     wss.clients.forEach(function each(client) {
       if (client.readyState === SocketServer.OPEN) {
@@ -63,13 +62,11 @@ wss.on('connection', (ws) => {
       }
     });
 
-    let displayMsg = `${receivedMsg.username} said ${receivedMsg.content}`
-    console.log('received: %s', displayMsg);
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => {console.log(wss.clients.size)
-    let clientCount = wss.clients.size
+    let clientCount = wss.clients.size;
     wss.clients.forEach(function each(client) {
     client.send(clientCount);
     })
